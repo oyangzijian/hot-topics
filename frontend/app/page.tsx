@@ -400,7 +400,7 @@ export default async function Home({
               完整 120+ 题材榜、会员专属报告与数据导出全量，在爱发电查看。
             </p>
             <a className="btn-member" href={AFDIAN_URL} target="_blank" rel="noopener noreferrer">
-              开通会员 →
+              爱发电 →
             </a>
           </div>
         </aside>

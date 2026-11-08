@@ -43,7 +43,7 @@ export default function SiteHeader() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          开通会员
+          爱发电
         </a>
       </div>
     </header>
