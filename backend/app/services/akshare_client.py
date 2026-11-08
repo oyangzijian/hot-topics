@@ -35,6 +35,7 @@ class AKShareClient:
     def __init__(self, min_interval: float = MIN_INTERVAL_SECONDS):
         self._list_cache: _CacheEntry | None = None
         self._cons_cache: dict[str, _CacheEntry] = {}
+        self._ff_cache: dict[str, _CacheEntry] = {}
         self._last_call_at = 0.0
         self._min_interval = min_interval
 
@@ -103,6 +104,86 @@ class AKShareClient:
         df = ak.stock_board_concept_cons_em(symbol=board_code)
         self._cons_cache[board_code] = _CacheEntry(at=now, value=df)
         return df
+
+    def fetch_index_daily_em(self, symbol: str, start_date: str | None = None,
+                             end_date: str | None = None):
+        """指数日线（东财，stock_zh_index_daily_em）。
+
+        列：date/open/close/high/low/volume/amount（amount 为成交额，元）。
+        带起止日期窗口拉取，避免每次下载全量历史（上证 8700+ 行）；
+        窗口拉取失败或行数不足 2 行时回退全量拉取。失败重试 3 次后抛异常，
+        调用方按字段缺失处理（返回 null），绝不编数。
+        """
+        ak = self._akshare()
+        last_exc: Exception | None = None
+        for _ in range(MAX_RETRIES):
+            try:
+                self._throttle()
+                if start_date and end_date:
+                    df = ak.stock_zh_index_daily_em(
+                        symbol=symbol, start_date=start_date, end_date=end_date
+                    )
+                else:
+                    df = ak.stock_zh_index_daily_em(symbol=symbol)
+                if len(df) >= 2:
+                    return df
+                # 行数不足：回退全量再试一次
+                self._throttle()
+                df = ak.stock_zh_index_daily_em(symbol=symbol)
+                return df
+            except Exception as exc:  # noqa: BLE001 - 限流/502 都走同一重试路径
+                last_exc = exc
+                time.sleep(2.0)
+        raise RuntimeError(
+            f"AKShare 指数日线拉取失败（重试 {MAX_RETRIES} 次，{symbol}）: {last_exc}"
+        )
+
+    def fetch_market_activity(self):
+        """两市涨跌家数/涨跌停数（乐股，stock_market_activity_legu）。
+
+        返回 item->value 的 DataFrame，item 含 上涨/下跌/平盘/停牌/涨停/
+        真实涨停/st st*涨停/跌停/真实跌停/st st*跌停/活跃度/统计日期。
+        2026-11-06 实测交叉核对：上涨/下跌与沪深个股逐家计数完全一致
+        （716/4431），涨停 33 = 涨停池 32 + ST 涨停 1，跌停 15 = 跌停池 15。
+        统计日期为 2026-11-06 15:00:00，调用方据此核对 trade_date。
+        """
+        ak = self._akshare()
+        last_exc: Exception | None = None
+        for _ in range(MAX_RETRIES):
+            try:
+                self._throttle()
+                return ak.stock_market_activity_legu()
+            except Exception as exc:  # noqa: BLE001
+                last_exc = exc
+                time.sleep(2.0)
+        raise RuntimeError(f"AKShare 市场活跃度拉取失败（重试 {MAX_RETRIES} 次）: {last_exc}")
+
+    def fetch_concept_fund_flow(self, board_name: str) -> float | None:
+        """某概念板块主力净流入（亿元，东财 stock_concept_fund_flow_hist）。
+
+        取最新交易日“主力净流入-净额”列（元）/ 1e8。概念板块口径，
+        不是行业口径（stock_fund_flow_concept(symbol="即时") 返回的是
+        387 行行业表，已验证排除）。1 小时缓存：同一交易日内多次刷新
+        共用一次拉取结果，控制东财调用量。
+        2026-11-06 实测：机器人概念 -116.30 亿、光伏概念 -29.93 亿；
+        两次重复调用值完全一致；超大单+大单 = 主力净流入，内部自洽。
+        任一环节失败返回 None，调用方保持 null，不编数。
+        """
+        now = time.monotonic()
+        hit = self._ff_cache.get(board_name)
+        if hit and now - hit.at < CONS_TTL_SECONDS:
+            return hit.value  # type: ignore[return-value]
+        try:
+            ak = self._akshare()
+            self._throttle()
+            df = ak.stock_concept_fund_flow_hist(symbol=board_name)
+            if df is None or len(df) == 0 or "主力净流入-净额" not in df.columns:
+                return None
+            value = float(df.iloc[-1]["主力净流入-净额"]) / 1e8
+            self._ff_cache[board_name] = _CacheEntry(at=now, value=value)
+            return value
+        except Exception:
+            return None
 
     def aggregate_board_metrics(self, board_code: str) -> dict:
         """第二步：成分股加总/计数，返回 {turnover_amount, limit_up_count}。

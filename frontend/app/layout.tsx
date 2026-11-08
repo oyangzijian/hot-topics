@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+import SiteHeader from "../components/site-header";
 
 const SITE_URL = "https://tcs.999777888.xyz";
 
@@ -26,17 +27,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-CN">
       <body>
-        <header className="topbar">
-          <a className="logo" href="/">978智能数据中心</a>
-          <nav>
-            <a href="/">热门题材</a>
-            <a href="/institutions">机构观点</a>
-            <a href="/reports">报告中心</a>
-            <a href="/search">搜索</a>
-          </nav>
-        </header>
+        <SiteHeader />
         <main>{children}</main>
         <footer>
+          <nav>
+            <Link href="/reports">报告中心</Link>
+            <Link href="/institutions">机构观点</Link>
+            <Link href="/search">搜索</Link>
+            <Link href="/admin/login">管理员登录</Link>
+          </nav>
           <p>
             数据来源：东方财富概念板块（经 AKShare）、同花顺主营产品与收入占比；
             热度分与分层规则见<Link href="/method">方法说明</Link>。

@@ -104,6 +104,7 @@ def get_topic_rank(db: Session = Depends(get_db)):
                 down_count=int(snap.down_count) if snap.down_count is not None else None,
                 limit_up_count=int(snap.limit_up_count) if snap.limit_up_count is not None else None,
                 turnover_amount=float(snap.turnover_amount) if snap.turnover_amount is not None else None,
+                main_net_inflow=float(snap.main_net_inflow) if snap.main_net_inflow is not None else None,
                 trend=trend,
                 is_composite=n_maps > 1,
                 snapshot_at=snap_at.isoformat() if snap_at else None,
@@ -137,6 +138,20 @@ def get_topic_rank(db: Session = Depends(get_db)):
         market_status=status["market_status"],
         stale_reason=status["stale_reason"],
     )
+
+
+@router.get("/api/market/overview")
+def get_market_overview():
+    """大盘指数条：三大指数 + 两市成交额 + 涨跌/涨跌停家数。
+
+    只读快照文件，不现算、不调 AKShare（避免触发限流）；快照由刷新
+    worker（榜单刷新收尾顺带，或 python -m app.workers.market_refresh --once）
+    写入。无快照时全部数字字段为 null + stale=true；刷新失败时返回
+    上一快照 + stale=true，绝不报 500。
+    """
+    from ..services.market_overview import load_snapshot, overview_response
+
+    return overview_response(load_snapshot())
 
 
 @router.get("/api/topics/{slug}")

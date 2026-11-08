@@ -8,7 +8,10 @@
 - 主力净流入：2026-11-07 晚验证不通过——stock_fund_flow_concept(symbol="即时")
   返回的是行业口径（387 行，列含“行业/净额”），不是概念板块口径，人形
   机器人这类概念不在其中；stock_concept_fund_flow_hist 当晚调 502 限流未
-  验证。结论：热度分里去掉主力净流入，不硬编，待退避后重测再定。
+  验证。2026-11-08 重测通过：stock_concept_fund_flow_hist 按概念名返回
+  120 日资金流，机器人概念 2026-11-06 主力净流入 -116.30 亿，两次调用
+  一致、超大单+大单=主力净流入自洽；但该指标只展示、不参与热度分
+  （DEFAULT_WEIGHTS 里仍没有 main_net_inflow，见 test_revenue_and_fundflow）。
 - rank_pct 为标准百分位排名（含并列平均），取值 [0, 1]。
 - 缺失指标权重置 0，其余权重归一化。
 """
@@ -17,7 +20,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 # v2.1 权重（键为指标名，与 HEAT_WEIGHTS_JSON 对应；合计 1.00）
-# 注意：DEFAULT_WEIGHTS 里没有 main_net_inflow——验证不通过，已去掉。
+# 注意：DEFAULT_WEIGHTS 里没有 main_net_inflow——该指标只展示、不参与热度分
+# （2026-11-08 概念资金流验证已通过，见 AKShareClient.fetch_concept_fund_flow）。
 DEFAULT_WEIGHTS: dict[str, float] = {
     "change_pct": 0.25,      # 第一步：概念列表
     "up_ratio": 0.20,        # 第一步：概念列表

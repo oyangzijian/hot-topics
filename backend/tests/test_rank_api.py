@@ -46,12 +46,14 @@ def test_rank_returns_sorted_list_with_humanoid(client):
     assert humanoid["name"] == "人形机器人"
     # 字段：有换手率、上涨占比、领涨公司；没有成交额/主力净流入/涨停家数
     # （第 1 步改动：涨停数/成交额/上涨家数等字段已加入接口，冻结快照里没有
-    # 第二步数据时值为空 null，而不是假装没有这个字段；主力净流入仍无来源、不返回）
+    # 第二步数据时值为空 null，而不是假装没有这个字段；主力净流入字段已加入，
+    # 冻结快照里无第二步资金流数据时为 null，由刷新时按领涨板块口径回填）
     assert "turnover_rate" in humanoid
     assert "up_ratio" in humanoid
     assert "leading_company" in humanoid
     assert "turnover" not in humanoid or True  # turnover_rate 是唯一口径
-    assert "main_net_inflow" not in humanoid
+    assert "main_net_inflow" in humanoid
+    assert humanoid["main_net_inflow"] is None  # 冻结快照无资金流数据
     assert humanoid["limit_up_count"] is None
     assert humanoid["turnover_amount"] is None
     assert humanoid["up_count"] == 59 and humanoid["down_count"] == 761  # 领涨板块“机器人概念”的上涨/下跌家数

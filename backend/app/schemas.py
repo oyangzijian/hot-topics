@@ -19,6 +19,7 @@ class RankItem(BaseModel):
     down_count: int | None = None  # 下跌家数（取领涨板块值）
     limit_up_count: int | None = None  # 涨停数（成分股近似计数，见方法说明页）
     turnover_amount: float | None = None  # 成分股成交额加总(元）
+    main_net_inflow: float | None = None  # 主力净流入（亿元，领涨板块口径；无数据为 null）
     trend: list[float] = []  # 近 5 次快照的热度分（旧→新），用于判断升温/降温
     is_composite: bool = False  # 是否组合题材（由多个概念板块取均值，见方法说明页）
     snapshot_at: str | None = None
@@ -37,4 +38,4 @@ class RankResponse(BaseModel):
     stale_reason: str | None = None  # stale 时写清原因，否则 None
     heat_formula: str = "v2.1-percentile"  # 当前线上公式；z-score v1.0 待批准，未切换
     source: str = "akshare-concept-board"
-    note: str = "热度分是涨跌幅、上涨占比等指标的加权结果，缺失指标不参与计算；主力净流入暂无可用来源。详细口径见方法说明页。"
+    note: str = "热度分是涨跌幅、上涨占比等指标的加权结果，缺失指标不参与计算；主力净流入为领涨概念板块的东财资金流（亿元），缺失时为 null，热度分不含该指标。详细口径见方法说明页。"

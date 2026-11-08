@@ -70,6 +70,7 @@ def refresh_once(db: Session, client: AKShareClient | None = None) -> dict:
     by_name = {s["name"]: s for s in scored}
     now = datetime.now(CST)
     updated = 0
+    fund_flows: dict[str, float | None] = {}  # 概念名 -> 主力净流入（亿元），同刷新内去重
     topics = db.query(Topic).all()
     for topic in topics:
         mappings = db.query(TopicConceptMap).filter_by(topic_id=topic.id).all()
@@ -94,6 +95,12 @@ def refresh_once(db: Session, client: AKShareClient | None = None) -> dict:
 
         best = max(mapped, key=lambda s: s["heat_score"])
         best_board = board_by_name[best["name"]]
+        # 主力净流入（亿元，领涨板块口径）：概念板块资金流，非行业口径。
+        # 同一刷新内每个概念只拉一次；失败置 null，不影响榜单写入。
+        # 热度公式仍是 v2.1，该指标只展示、不参与热度分。
+        if best_board.name not in fund_flows:
+            fetch_ff = getattr(client, "fetch_concept_fund_flow", None)
+            fund_flows[best_board.name] = fetch_ff(best_board.name) if fetch_ff else None
         db.add(
             TopicRankSnapshot(
                 topic_id=topic.id,
@@ -101,7 +108,7 @@ def refresh_once(db: Session, client: AKShareClient | None = None) -> dict:
                 heat_score=heat,
                 change_pct=wmean("change_pct"),
                 turnover=wmean("turnover_rate"),  # v2：存换手率(%)，不是成交额
-                main_net_inflow=None,  # v2：无可用来源
+                main_net_inflow=fund_flows[best_board.name],  # 亿元，领涨板块口径；无数据为 NULL
                 # 上涨/下跌家数、涨停数、成交额、领涨代码取映射板块中热度最高者（领涨板块），
                 # 不是多板块加总；组合题材的这些数是领涨板块口径，界面不得写成全题材口径。
                 limit_up_count=int(best_board.limit_up_count)
@@ -127,6 +134,14 @@ def refresh_once(db: Session, client: AKShareClient | None = None) -> dict:
     for i, snap in enumerate(snaps, start=1):
         snap.rank = i
     db.commit()
+    # 顺带刷新大盘指数条快照（同一 30 分钟刷新路径）；指数条失败绝不
+    # 影响榜单写入，失败时端点继续返回上一快照 + stale=true。
+    try:
+        from .market_refresh import refresh_market_overview
+
+        refresh_market_overview(client=client)
+    except Exception:
+        pass
     return {"ok": True, "stale": False, "last_success_at": now.isoformat(), "updated_topics": updated}
 
 

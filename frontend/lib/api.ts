@@ -16,6 +16,9 @@ export interface RankItem {
   down_count: number | null;
   limit_up_count: number | null;
   turnover_amount: number | null;
+  // 主力净流入（亿元）：后端目前不返回该字段；只有当榜单 API 返回非 null
+  // 时首页才渲染这一列，否则整列不渲染，绝不编数。
+  main_net_inflow?: number | null;
   trend: number[];
   is_composite: boolean;
   snapshot_at: string | null;
@@ -114,6 +117,40 @@ async function getJSON<T>(path: string, cookie?: string): Promise<T> {
     throw new Error(`接口失败：${path} HTTP ${res.status}`);
   }
   return (await res.json()) as T;
+}
+
+// 爱发电创作者主页：全站唯一的付费/会员入口，一律外链（新标签页打开），
+// 不做站内付费、不做服务端核验。
+export const AFDIAN_URL = "https://afdian.com/a/978datacenter";
+
+// ---- 大盘指数条：GET /api/market/overview（后端实现中）。
+// 数字字段可能为 null；接口失败返回 null，由调用方展示“未获取”，绝不编数。 ----
+export interface MarketIndex {
+  name: string;
+  code: string;
+  value: number | null;
+  change_pct: number | null;
+}
+
+export interface MarketOverview {
+  trade_date: string | null;
+  fetched_at: string | null;
+  stale: boolean;
+  indices: MarketIndex[];
+  turnover_amount: number | null; // 两市成交额（亿元）
+  turnover_change_pct: number | null; // 较昨日（%）
+  up_count: number | null;
+  down_count: number | null;
+  limit_up_count: number | null;
+  limit_down_count: number | null;
+}
+
+export async function fetchMarketOverview(): Promise<MarketOverview | null> {
+  try {
+    return await getJSON<MarketOverview>("/api/market/overview");
+  } catch {
+    return null;
+  }
 }
 
 export async function fetchRank(): Promise<RankResponse> {
