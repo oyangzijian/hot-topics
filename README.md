@@ -8,6 +8,10 @@ A 股题材数据站：题材热度榜 → 题材行业页 → 公司深度报�
 > 爱发电接入结论见 `docs/AFDIAN.md`；新旧热度对照见 `docs/heat_comparison.md`；
 > 抽取评测集与方法见 `docs/EXTRACTION_EVAL.md`。
 
+## 支持本站
+
+网站免费公开，会员专属内容在爱发电：[978datacenter](https://afdian.com/a/978datacenter)（支持者 5 元/月、深度会员 15 元/月、长期支持 30 元/月）。
+
 ## 目录
 
 ```

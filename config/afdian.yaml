@@ -8,6 +8,7 @@
 #     到时把下面 mode 改成 server_verified，并填好 plans 映射；凭证
 #     （AFDIAN_USER_ID、AFDIAN_TOKEN）只存服务端环境变量，绝不进仓库。
 mode: external_link_only  # external_link_only | server_verified
+creator_url: "https://afdian.com/a/978datacenter"  # 创作者主页，2026-11-08 已上线
 #
 # 本文件只放“本站如何判定会员”的映射，不放任何凭证。
 #
