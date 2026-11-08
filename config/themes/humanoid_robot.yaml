@@ -1,0 +1,14 @@
+id: humanoid_robot
+name: 人形机器人
+aliases: [具身智能, 机器人]
+keywords: [人形机器人, 灵巧手, 行星滚柱丝杠, 谐波减速器, 力矩传感器, 无框力矩电机]
+candidate_pool:
+  source: vendor_concept_board     # 数据商概念板块作为候选池
+  board_name: 人形机器人
+chain:
+  upstream:   [减速器, 传感器, 伺服电机, 丝杠, 结构件]
+  midstream:  [执行器, 控制系统, 整机]
+  downstream: [工业制造, 物流仓储, 服务陪伴]
+# 公司在产业链中的角色来自此映射（人工维护，可由 muse 提议、人批准）
+# code: {node: 环节, role: core|support|edge}
+company_roles: {}

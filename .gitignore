@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+.pytest_cache/
+*.db
+*.sqlite3
+# Node / Next.js
+node_modules/
+.next/
+.vercel/
+.open-next/
+*.tsbuildinfo
+# 环境与凭证（绝不进仓库）
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+# 系统
+.DS_Store

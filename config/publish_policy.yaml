@@ -1,0 +1,5 @@
+# 文本类内容的发布策略。改动需人批准（见 docs/RULES.md）。
+# 校验全部通过后：列在 auto_publish_kinds 里的类型自动发布，其余一律进人工审核队列。
+auto_publish_kinds: [timeline]     # 时间线（带日期的事实）可自动发布；概况(overview)必须人工审核
+max_statement_chars: 200
+max_statements_per_document: 5

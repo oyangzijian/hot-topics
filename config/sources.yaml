@@ -1,0 +1,7 @@
+# 数据新鲜度阈值（秒）。trading_only=true 表示只在交易时段检查。
+freshness:
+  quotes_intraday:  {max_age: 180,    trading_only: true}
+  theme_heat_ts:    {max_age: 180,    trading_only: true}
+  announcements:    {max_age: 1800,   trading_only: false}
+  quotes_daily:     {max_age: 90000,  trading_only: false}
+  relevance_scores: {max_age: 90000,  trading_only: false}

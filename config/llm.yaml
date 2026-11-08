@@ -1,0 +1,35 @@
+# LLM 抽取客户端配置（2026-11-08 用户授权改为可配置/可插拔；模型改 Muse）。
+#
+# provider 与模型一律走本文件，不在代码里写死模型名。
+# 包 astock-data 的 extract/pipeline.py 与 revenue_extractor.py 原先写死
+# anthropic.Anthropic() + 默认模型 claude-sonnet-5-5，移植时必须改走
+# backend/app/extract/llm_client.py 的客户端注册表，不要照搬写死写法。
+#
+# 模型（2026-11-08 用户定）：Muse（即本助手），为默认/首选实现。
+# Muse 没有像 Anthropic 那样给后端代码直接调的 API key，所以 muse provider
+# 不在后端发 HTTP 请求、不编造端点/key：后端只生成抽取任务
+# （llm_client.extraction_job），抽取由助手在定时或手动流程里执行；
+# 助手输出必须同样过校验器（app.publish.validator.check_statement），
+# 校验通过后才能入库——绝不跳过校验直接入库。
+#
+# key 仍没有：provider 保持 muse（助手执行，不需要 key）；anthropic 备选
+# 需要 key 时再配。换模型上线前，仍须按 docs/EXTRACTION_EVAL.md 在 30 份
+# 以上真实文档上评测提示词，结果交用户批准后才能上线。
+provider: muse  # muse（默认，助手执行）| manual（关闭，不调任何模型）| anthropic
+
+providers:
+  muse:
+    # 助手执行模式：没有 api_key_env、没有 endpoint——不要编造。
+    mode: assistant_executed
+    # 抽取任务的提示词模板版本；改提示词要同步改评测（重测 30 份）。
+    prompt_version: v1
+  anthropic:
+    model: ""      # 必填（留空 = 未配置）。换模型只改这里，不改代码。
+    max_tokens: 2000
+    api_key_env: ANTHROPIC_API_KEY
+  # 以后加新厂商时，在此加一段 providers.<name>，并在
+  # backend/app/extract/llm_client.py 的 PROVIDERS 里注册一个实现类。
+
+eval:
+  min_docs: 30     # 换模型上线前评测的真实文档数下限（RULES.md）
+  required: true   # 未评测/未批准，抽取不上线

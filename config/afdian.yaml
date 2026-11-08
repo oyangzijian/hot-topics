@@ -1,0 +1,38 @@
+# 爱发电（afdian）接入配置。
+# 付费墙改用爱发电：网站本身保持公开，会员专属内容走爱发电。
+#
+# 接法（2026-11-08 用户定，分两步走）：
+# (a) 现在：只外链——网站保持免费公开，会员专属内容放爱发电，站里只挂链接，
+#     不做服务端核验，不锁任何站内内容，不需要 API Token。
+# (b) 以后：有了付费用户后，再接服务端核验（链路见 docs/AFDIAN.md 第 2 节），
+#     到时把下面 mode 改成 server_verified，并填好 plans 映射；凭证
+#     （AFDIAN_USER_ID、AFDIAN_TOKEN）只存服务端环境变量，绝不进仓库。
+mode: external_link_only  # external_link_only | server_verified
+#
+# 本文件只放“本站如何判定会员”的映射，不放任何凭证。
+#
+# 核验能力（2026-11-08 已按官方开发者文档核实，见 docs/AFDIAN.md）：
+# - 服务端可核验：调开放 API query-sponsor，按 user_id 过滤，读
+#   current_plan.plan_id + expire_time（秒级时间戳）判定是否有效会员。
+# - Webhook 无签名：收到回调后必须调 query-order 按 out_trade_no 二次确认，
+#   并做幂等；不能只凭回调开通权益。
+# - 无到期/取消推送：过期只能靠定时轮询 query-sponsor 的 expire_time 收回权限。
+# - 身份绑定二选一（二选一，需实测后定）：OAuth2 登录（拿 user_id，需私信官方人工
+#   申请）或下单链接 custom_order_id（写本站用户 ID，须实测确认该参数仍有效）。
+#
+# plan_id 映射：方案 ID 只能从爱发电创作者后台人工取（无列出全部方案的接口）。
+# 用户在爱发电建好档位后，在此填入 plan_id -> 本站权益的映射，再上线。
+# 在映射填好之前，会员判定保持关闭（全部按免费处理），不得编造档位。
+plans: {}
+# 例（填入真实 plan_id 后取消注释）：
+# plans:
+#   "123456": {name: "月度会员", months: 1, grants: ["member_reports"]}
+
+# 免费额度（业务决策，需用户批准后填数字；未填之前不锁任何已公开内容）。
+# 包原设计的常量是：前 10 题材、前 3 公司、财务 2 期、公告 3 条。
+# 是否沿用这组数字，等用户批。
+free_limits:
+  themes: null       # 免费可见题材数（null = 不限制）
+  companies_per_theme: null
+  financial_periods: null
+  announcements: null

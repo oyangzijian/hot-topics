@@ -1,0 +1,170 @@
+[
+ {
+  "topic": "人形机器人",
+  "boards": 4,
+  "old": 32.47,
+  "new": 41.77,
+  "rank_old": 21,
+  "rank_new": 21
+ },
+ {
+  "topic": "东方财富热股",
+  "boards": 1,
+  "old": 88.73,
+  "new": 58.9,
+  "rank_old": 1,
+  "rank_new": 19
+ },
+ {
+  "topic": "昨日涨停_含一字",
+  "boards": 1,
+  "old": 87.19,
+  "new": 66.6,
+  "rank_old": 2,
+  "rank_new": 11
+ },
+ {
+  "topic": "近期新高",
+  "boards": 1,
+  "old": 86.92,
+  "new": 64.0,
+  "rank_old": 3,
+  "rank_new": 14
+ },
+ {
+  "topic": "昨日涨停",
+  "boards": 1,
+  "old": 86.32,
+  "new": 65.3,
+  "rank_old": 4,
+  "rank_new": 13
+ },
+ {
+  "topic": "百日新高",
+  "boards": 1,
+  "old": 86.18,
+  "new": 64.0,
+  "rank_old": 5,
+  "rank_new": 15
+ },
+ {
+  "topic": "昨日连板",
+  "boards": 1,
+  "old": 85.45,
+  "new": 74.2,
+  "rank_old": 6,
+  "rank_new": 5
+ },
+ {
+  "topic": "昨日连板_含一字",
+  "boards": 1,
+  "old": 85.14,
+  "new": 80.3,
+  "rank_old": 7,
+  "rank_new": 3
+ },
+ {
+  "topic": "农业种植",
+  "boards": 1,
+  "old": 85.09,
+  "new": 67.8,
+  "rank_old": 8,
+  "rank_new": 9
+ },
+ {
+  "topic": "粮食概念",
+  "boards": 1,
+  "old": 84.98,
+  "new": 77.1,
+  "rank_old": 9,
+  "rank_new": 4
+ },
+ {
+  "topic": "昨日打二板以上表现",
+  "boards": 1,
+  "old": 84.05,
+  "new": 100.0,
+  "rank_old": 10,
+  "rank_new": 1
+ },
+ {
+  "topic": "转基因",
+  "boards": 1,
+  "old": 82.87,
+  "new": 80.7,
+  "rank_old": 11,
+  "rank_new": 2
+ },
+ {
+  "topic": "绿色电力",
+  "boards": 1,
+  "old": 82.78,
+  "new": 68.0,
+  "rank_old": 12,
+  "rank_new": 8
+ },
+ {
+  "topic": "题材股",
+  "boards": 1,
+  "old": 82.75,
+  "new": 59.4,
+  "rank_old": 13,
+  "rank_new": 17
+ },
+ {
+  "topic": "趋势股",
+  "boards": 1,
+  "old": 82.67,
+  "new": 67.6,
+  "rank_old": 14,
+  "rank_new": 10
+ },
+ {
+  "topic": "红利股",
+  "boards": 1,
+  "old": 82.49,
+  "new": 70.7,
+  "rank_old": 15,
+  "rank_new": 6
+ },
+ {
+  "topic": "水产概念",
+  "boards": 1,
+  "old": 82.4,
+  "new": 66.3,
+  "rank_old": 16,
+  "rank_new": 12
+ },
+ {
+  "topic": "TOPCon电池",
+  "boards": 1,
+  "old": 82.26,
+  "new": 59.5,
+  "rank_old": 17,
+  "rank_new": 16
+ },
+ {
+  "topic": "新能源",
+  "boards": 1,
+  "old": 81.73,
+  "new": 58.9,
+  "rank_old": 18,
+  "rank_new": 20
+ },
+ {
+  "topic": "昨日首板",
+  "boards": 1,
+  "old": 79.86,
+  "new": 59.0,
+  "rank_old": 19,
+  "rank_new": 18
+ },
+ {
+  "topic": "大盘价值",
+  "boards": 1,
+  "old": 79.48,
+  "new": 68.8,
+  "rank_old": 20,
+  "rank_new": 7
+ }
+]

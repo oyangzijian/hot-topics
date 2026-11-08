@@ -1,0 +1,24 @@
+/* 克制、高级、编辑感：深墨 + 米白 + 赭橙点缀（与 978 站同一路数），大标题 + 留白。 */
+:root { --ink: #1c1a17; --paper: #faf7f1; --accent: #b4552d; --line: #e3ddd2; --muted: #6f6a61; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Songti SC", "Noto Serif SC", serif; line-height: 1.6; }
+a { color: var(--ink); }
+.topbar { display: flex; justify-content: space-between; align-items: baseline; padding: 20px 32px; border-bottom: 1px solid var(--line); }
+.logo { font-size: 22px; font-weight: 700; text-decoration: none; }
+.topbar nav a { margin-left: 20px; text-decoration: none; color: var(--muted); }
+main { max-width: 960px; margin: 0 auto; padding: 32px; }
+footer { max-width: 960px; margin: 0 auto; padding: 24px 32px 48px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+h1 { font-size: 34px; margin: 8px 0 4px; }
+.muted { color: var(--muted); }
+.stale { display: inline-block; background: #f3e2d3; color: var(--accent); padding: 2px 8px; font-size: 13px; margin-left: 8px; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 15px; }
+th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 400; font-size: 13px; }
+.num { font-family: ui-monospace, monospace; }
+.tag { display: inline-block; border: 1px solid var(--line); padding: 1px 7px; font-size: 12px; }
+.tag.core { border-color: var(--accent); color: var(--accent); }
+/* A 股习惯：涨红跌绿 */
+.up { color: #c0392b; }
+.down { color: #1d8a4e; }
+.card { border: 1px solid var(--line); padding: 16px 20px; margin: 12px 0; background: #fff; }
+.error { border: 1px solid var(--accent); padding: 16px; margin-top: 20px; }

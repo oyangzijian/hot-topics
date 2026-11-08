@@ -1,0 +1,19 @@
+# TOPCon电池题材定义（2026-11-07 已核验：保留 49 家 / 待复核 31 家）。
+# 候选池与环节来自当时的主营核验分层，不是凭空写的；改动需人工批准。
+id: topcon_battery
+name: TOPCon电池
+aliases: [TOPCon, 光伏电池]
+keywords: [TOPCon, 电池片, 光伏电池, 隧穿氧化层, 钝化接触]
+candidate_pool:
+  source: vendor_concept_board     # 数据商概念板块作为候选池
+  board_name: TOPCon电池
+  outer_board_name: 光伏概念       # 外圈召回板（仅 TOPCon 板 40 家时补召回）
+chain:
+  upstream:   [硅片硅料, 辅材]
+  midstream:  [设备, 电池片, 组件]
+  downstream: [逆变器与电站, 其他光伏]
+# 环节归组（2026-11-07 实测保留 49 家的分布）：
+# 设备 14、电池片 9、其他光伏 8、辅材 7、硅片硅料 4、逆变器与电站 4、组件 3。
+# 公司在产业链中的角色来自主营核验分层（人工维护，可由 muse 提议、人批准）
+# code: {node: 环节, role: core|support|edge}
+company_roles: {}

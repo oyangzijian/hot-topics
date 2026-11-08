@@ -1,0 +1,13 @@
+# 关联度得分规则。改动需人工批准，且必须递增 version。
+version: "1.0"
+weights:
+  revenue_share: 0.40
+  disclosure: 0.30
+  chain_position: 0.20
+  patent: 0.10
+caps:
+  revenue_share_full_at: 0.50   # 题材收入占比达到 50% 该项记满分
+  disclosure_full_at: 5         # 近12个月实质性披露 5 条记满分
+  patent_full_at: 100           # 相关专利 100 项记满分
+chain_role_score: {core: 100, support: 60, edge: 30}
+tiers: {high: 70, mid: 40}      # >=70 高关联；40-70 中关联；<40 弱关联

@@ -1,0 +1,10 @@
+# 热度指数配置。改动需人工批准（见 docs/RULES.md）。
+version: "1.0"
+scale: 25            # heat = 50 + scale * sum(weight * zscore)，截断到 0-100
+weights:
+  pct_change: 0.25       # 题材成分股平均涨跌幅
+  limit_up_count: 0.20   # 涨停家数
+  turnover_share: 0.20   # 题材成交额占全市场比
+  net_inflow: 0.15       # 主力净流入
+  up_ratio: 0.10         # 上涨家数占比
+  news_heat: 0.10        # 新闻/搜索热度

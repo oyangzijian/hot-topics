@@ -1,0 +1,15 @@
+# Phase 1: FastAPI + SQLAlchemy, SQLite by default, PostgreSQL via DATABASE_URL.
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+sqlalchemy==2.0.36
+pydantic==2.10.4
+pydantic-settings==2.7.1
+sse-starlette==2.2.1
+bcrypt==5.0.0  # 管理员密码哈希（ADMIN_PASSWORD_HASH）
+pyyaml==6.0.3  # config/*.yaml（热度权重、发布策略、LLM 客户端等）
+# AKShare is optional and only imported lazily inside akshare_client.py.
+# Install separately when live refresh is needed: pip install akshare==1.20.35
+# Tests
+pytest==8.3.4
+httpx==0.28.1
+pandas==2.2.3
